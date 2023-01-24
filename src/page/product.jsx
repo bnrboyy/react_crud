@@ -107,7 +107,7 @@ export default function Product() {
               required
             />
           </div>
-          <div></div>
+          
 
           <button
             onClick={() => create()}
