@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import "./product.scss";
+import ProductEdit from "./productEdit";
 
 export default function Product() {
   const setFormData = {
     id: "",
     name: "",
-    price: "",
+    price: 0,
     category: "",
     author: "",
   };
@@ -14,15 +15,13 @@ export default function Product() {
 
   const [product, setProduct] = useState([]);
 
+  const [showEdit, setShowEdit] = useState(setFormData);
 
-
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
+  useEffect(() => {}, [showEdit]);
 
   const create = () => {
     let currentData = data;
-    currentData.id = Date.now();
+    currentData.id = Date.now(); //random number
 
     if (
       currentData.name == "" ||
@@ -36,14 +35,31 @@ export default function Product() {
     }
   };
 
+  useEffect(() => {
+    console.log(showEdit);
+  }, [showEdit]);
+
   const onDelete = (id) => {
-    let result = product.filter((product) => product.id !== id);
+    let result = product.filter((product) => product.id != id);
     setProduct(result);
-    console.log(product);
+    setShowEdit([]);
   };
 
-  const edit = (id) => {
-    console.log(id);
+  const editHandler = (id) => {
+    const productById = product.find((el) => el.id === id);
+    setShowEdit(productById);
+  };
+
+  const update = (id) => {
+    let result = product.map((el, index) => {
+      if (el.id == id) {
+        return showEdit;
+      } else {
+        return el;
+      }
+    });
+
+    setProduct(result);
   };
 
   return (
@@ -107,7 +123,6 @@ export default function Product() {
               required
             />
           </div>
-          
 
           <button
             onClick={() => create()}
@@ -117,62 +132,12 @@ export default function Product() {
             Create
           </button>
         </form>
-
-        <form className="w-1/3 mb-6 mt-6 ml-auto mr-auto">
-          <div className="mb-6">
-            <label htmlFor="name" className="label-form">
-              Book_Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="price" className="label-form">
-              Book_Price
-            </label>
-            <input
-              type="number"
-              min="0"
-              id="price"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="category" className="label-form">
-              Category
-            </label>
-            <input
-              type="text"
-              id="category"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="author" className="label-form">
-              Author
-            </label>
-            <input
-              type="text"
-              id="author"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Update
-          </button>
-        </form>
       </div>
+      <ProductEdit
+        showEdit={showEdit}
+        setShowEdit={setShowEdit}
+        update={update}
+      />
 
       <div className="w-2/3 ml-auto mr-auto">
         <table className="min-w-full">
@@ -240,7 +205,7 @@ export default function Product() {
                   </td>
                   <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                     <button
-                      onClick={() => edit(item.id)}
+                      onClick={() => editHandler(item.id)}
                       type="button"
                       className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:focus:ring-yellow-900"
                     >
@@ -260,6 +225,7 @@ export default function Product() {
           </tbody>
         </table>
       </div>
+      
     </>
   );
 }

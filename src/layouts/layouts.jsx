@@ -61,7 +61,7 @@ export default function Layouts() {
           </div>
         </div>
       </nav>
-      <Outlet />
+      <Outlet /> 
     </>
   );
 }

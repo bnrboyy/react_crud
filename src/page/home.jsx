@@ -12,11 +12,10 @@ export default function Home() {
 
   useEffect(() => {
     getBook();
-  }, []);
+  }, []); 
 
   const getBook = async () => {
     getBookApi().then((res) => {
-      console.log(res);
       setResponse(res.data);
     });
   };
@@ -74,7 +73,6 @@ export default function Home() {
       },
       data: data,
     }).then((res) => {
-      console.log(res);
       getBook();
     });
   };
